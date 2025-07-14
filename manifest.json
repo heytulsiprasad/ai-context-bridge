@@ -6,7 +6,8 @@
   "permissions": [
     "activeTab",
     "scripting",
-    "storage"
+    "storage",
+    "clipboardWrite"
   ],
   "background": {
     "service_worker": "background.js"
@@ -19,6 +20,12 @@
     {
       "matches": ["*://chat.openai.com/*"],
       "js": ["content_chatgpt.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["styles.css"],
+      "matches": ["<all_urls>"]
     }
   ],
   "icons": {
