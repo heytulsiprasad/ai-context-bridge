@@ -46,39 +46,35 @@
     drawer.id = 'ai-context-drawer';
     drawer.innerHTML = `
       <div class="drawer-tab">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" fill="currentColor"/>
-        </svg>
+        <img src="${chrome.runtime.getURL('icons/icon48.png')}" alt="AI Context Bridge" width="20" height="20" />
       </div>
       <div class="drawer-content">
         <div class="drawer-section">
           <div class="menu-item" data-action="openInClaude">
             <img src="" data-icon="robot" alt="Claude" />
             <span>Open in Claude</span>
+            <img src="" data-icon="external" alt="External Link" class="external-icon" />
           </div>
           <div class="menu-item" data-action="openInChatGPT">
             <img src="" data-icon="chatgpt" alt="ChatGPT" />
             <span>Open in ChatGPT</span>
-          </div>
-          <div class="menu-item" data-action="openInGemini">
-            <img src="" data-icon="gemini" alt="Gemini" />
-            <span>Open in Gemini</span>
+            <img src="" data-icon="external" alt="External Link" class="external-icon" />
           </div>
           <div class="menu-item" data-action="openInGrok">
             <img src="" data-icon="grok" alt="Grok" />
             <span>Open in Grok</span>
+            <img src="" data-icon="external" alt="External Link" class="external-icon" />
           </div>
         </div>
         <div class="drawer-divider"></div>
         <div class="drawer-section">
-          <div class="section-header">Continue Conversation</div>
-          <div class="menu-item" data-action="continueInGemini">
-            <img src="" data-icon="arrow" alt="Continue" />
-            <span>Continue in Gemini</span>
+          <div class="menu-item" data-action="copyAsMarkdown">
+            <img src="" data-icon="copy" alt="Copy" />
+            <span>Copy as Markdown</span>
           </div>
-          <div class="menu-item" data-action="continueInChatGPT">
-            <img src="" data-icon="arrow" alt="Continue" />
-            <span>Continue in ChatGPT</span>
+          <div class="menu-item youtube-only" data-action="copyYouTubeVideo" style="display: none;">
+            <img src="" data-icon="youtube" alt="YouTube" />
+            <span>Copy YouTube Video</span>
           </div>
         </div>
       </div>
@@ -94,6 +90,9 @@
         
         // Load icon images
         loadIcons(shadowRoot);
+        
+        // Show YouTube-specific options if on YouTube
+        checkForYouTube(shadowRoot);
       });
     
     // Drawer hover behavior
@@ -108,6 +107,54 @@
         drawer.classList.remove('expanded');
       }, 300);
     });
+    
+    // Make drawer draggable vertically
+    let isDragging = false;
+    let startY = 0;
+    let startTop = 0;
+    
+    const drawerTab = drawer.querySelector('.drawer-tab');
+    
+    drawerTab.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      startY = e.clientY;
+      startTop = drawer.offsetTop;
+      drawerTab.style.cursor = 'grabbing';
+      e.preventDefault();
+    });
+    
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      
+      const deltaY = e.clientY - startY;
+      const newTop = startTop + deltaY;
+      
+      // Constrain to viewport bounds
+      const maxTop = window.innerHeight - drawer.offsetHeight;
+      const constrainedTop = Math.max(0, Math.min(newTop, maxTop));
+      
+      drawer.style.top = constrainedTop + 'px';
+      
+      // Store position in chrome storage for all websites
+      chrome.storage.sync.set({ drawerPosition: constrainedTop });
+    });
+    
+    document.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        drawerTab.style.cursor = 'grab';
+      }
+    });
+    
+    // Restore saved position from chrome storage
+    chrome.storage.sync.get(['drawerPosition'], (data) => {
+      if (data.drawerPosition !== undefined) {
+        drawer.style.top = data.drawerPosition + 'px';
+      }
+    });
+    
+    // Set initial cursor
+    drawerTab.style.cursor = 'grab';
     
     
     // Function to extract page content if no text is selected
@@ -132,9 +179,10 @@
         e.preventDefault();
         const action = menuItem.dataset.action;
         
-        // For continue actions, we need to get the full conversation
-        if (action.startsWith('continue')) {
-          handleContinueAction(action);
+        if (action === 'copyAsMarkdown') {
+          handleCopyAsMarkdown();
+        } else if (action === 'copyYouTubeVideo') {
+          handleCopyYouTubeVideo();
         } else {
           // Use selected text if available, otherwise extract page content
           const contentToSend = selectedText || extractPageContent();
@@ -148,38 +196,68 @@
       }
     });
     
-    // Handle continue conversation actions
-    function handleContinueAction(action) {
-      // This will be implemented based on the current site
+    // Handle copy as markdown action
+    function handleCopyAsMarkdown() {
+      const url = window.location.href;
+      const prompt = `Read from ${url} so I can ask questions about it.`;
+      copyTextToClipboard(prompt);
+      showNotification('URL prompt copied to clipboard!');
+    }
+    
+    // Handle copy YouTube video action
+    function handleCopyYouTubeVideo() {
+      const url = window.location.href;
+      const prompt = `Watch this video: ${url}`;
+      copyTextToClipboard(prompt);
+      showNotification('YouTube video prompt copied to clipboard!');
+    }
+    
+    // Check if we're on YouTube and show YouTube-specific options
+    function checkForYouTube(shadowRoot) {
       const currentUrl = window.location.href;
-      
-      if (currentUrl.includes('chat.openai.com') || currentUrl.includes('chatgpt.com')) {
-        extractChatGPTConversation((conversation) => {
-          chrome.runtime.sendMessage({
-            action: action,
-            conversation: conversation,
-            fromPlatform: 'chatgpt'
-          });
+      if (currentUrl.includes('youtube.com/watch') || currentUrl.includes('youtu.be/')) {
+        const youtubeItems = shadowRoot.querySelectorAll('.youtube-only');
+        youtubeItems.forEach(item => {
+          item.style.display = 'flex';
         });
-      } else if (currentUrl.includes('gemini.google.com')) {
-        extractGeminiConversation((conversation) => {
-          chrome.runtime.sendMessage({
-            action: action,
-            conversation: conversation,
-            fromPlatform: 'gemini'
-          });
-        });
-      } else if (currentUrl.includes('claude.ai')) {
-        extractClaudeConversation((conversation) => {
-          chrome.runtime.sendMessage({
-            action: action,
-            conversation: conversation,
-            fromPlatform: 'claude'
-          });
-        });
-      } else {
-        alert('Continue conversation is only available on ChatGPT, Gemini, or Claude pages.');
       }
+    }
+    
+    // Helper function to copy text to clipboard
+    function copyTextToClipboard(text) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text);
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
+    }
+    
+    // Helper function to show notification
+    function showNotification(message) {
+      const notification = document.createElement('div');
+      notification.textContent = message;
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #667eea;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 14px;
+        z-index: 999999;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      `;
+      document.body.appendChild(notification);
+      setTimeout(() => notification.remove(), 3000);
     }
     
     // Append elements to shadow DOM
@@ -192,10 +270,12 @@
   // Function to load icon images
   function loadIcons(shadowRoot) {
     const iconMap = {
-      'robot': 'https://img.icons8.com/color/24/ai-robot.png',
-      'chatgpt': 'https://img.icons8.com/color/24/chatgpt.png',
-      'gemini': 'https://img.icons8.com/color/24/gemini-ai.png',
-      'grok': 'https://img.icons8.com/color/24/ai-robot--v2.png',
+      'robot': chrome.runtime.getURL('icons/claude.png'),
+      'chatgpt': chrome.runtime.getURL('icons/chatgpt.jpg'),
+      'copy': 'https://img.icons8.com/color/24/copy.png',
+      'grok': chrome.runtime.getURL('icons/grok.png'),
+      'external': chrome.runtime.getURL('icons/ext-link.png'),
+      'youtube': 'https://img.icons8.com/color/24/youtube-play.png',
       'arrow': 'https://img.icons8.com/color/24/circled-right-2.png'
     };
     
@@ -207,136 +287,4 @@
     });
   }
   
-  // Conversation extraction functions
-  function extractChatGPTConversation(callback) {
-    // Scroll to top first
-    window.scrollTo(0, 0);
-    
-    setTimeout(() => {
-      const messages = [];
-      
-      // Try multiple selectors for ChatGPT conversation turns
-      const selectors = [
-        '[data-testid*="conversation-turn"]',
-        '.group.w-full',
-        '[class*="group"][class*="text-token"]',
-        '.flex.flex-col.text-sm'
-      ];
-      
-      let conversationElements = null;
-      for (const selector of selectors) {
-        conversationElements = document.querySelectorAll(selector);
-        if (conversationElements.length > 0) break;
-      }
-      
-      if (conversationElements) {
-        conversationElements.forEach(element => {
-          // Check if it's a user message
-          const isUser = element.querySelector('[data-message-author-role="user"]') ||
-                        element.textContent.includes('You') ||
-                        element.querySelector('.dark\\:bg-gray-800') ||
-                        element.classList.contains('dark:bg-gray-800');
-          
-          // Extract text content
-          const textElements = element.querySelectorAll('.whitespace-pre-wrap, .markdown, p, [class*="prose"]');
-          let text = '';
-          
-          if (textElements.length > 0) {
-            text = Array.from(textElements).map(el => el.textContent.trim()).join('\n');
-          } else {
-            text = element.textContent.trim();
-          }
-          
-          if (text && text.length > 10) {
-            const role = isUser ? 'User' : 'Assistant';
-            messages.push(`${role}: ${text}`);
-          }
-        });
-      }
-      
-      // Format as markdown
-      const conversation = messages.join('\n\n---\n\n');
-      callback(conversation || 'No conversation found. Make sure you are on a ChatGPT conversation page.');
-    }, 1000); // Wait for scroll
-  }
-  
-  function extractGeminiConversation(callback) {
-    // Scroll to top first
-    window.scrollTo(0, 0);
-    
-    setTimeout(() => {
-      const messages = [];
-      
-      // Try multiple selectors for Gemini conversation
-      const selectors = [
-        '[data-test-id="conversation-turn"]',
-        '.conversation-turn',
-        '[class*="message-content"]',
-        '.model-response-text, .user-query-text'
-      ];
-      
-      let conversationElements = null;
-      for (const selector of selectors) {
-        conversationElements = document.querySelectorAll(selector);
-        if (conversationElements.length > 0) break;
-      }
-      
-      if (conversationElements) {
-        conversationElements.forEach((element, index) => {
-          const text = element.textContent.trim();
-          if (text && text.length > 10) {
-            // Alternate between user and assistant
-            const role = index % 2 === 0 ? 'User' : 'Assistant';
-            messages.push(`${role}: ${text}`);
-          }
-        });
-      }
-      
-      // Format as markdown
-      const conversation = messages.join('\n\n---\n\n');
-      callback(conversation || 'No conversation found. Make sure you are on a Gemini conversation page.');
-    }, 1000); // Wait for scroll
-  }
-  
-  function extractClaudeConversation(callback) {
-    // Scroll to top first
-    window.scrollTo(0, 0);
-    
-    setTimeout(() => {
-      const messages = [];
-      
-      // Try multiple selectors for Claude conversation
-      const selectors = [
-        '[data-testid*="conversation"]',
-        '.prose',
-        '[class*="message"]',
-        '.conversation-turn'
-      ];
-      
-      let conversationElements = null;
-      for (const selector of selectors) {
-        conversationElements = document.querySelectorAll(selector);
-        if (conversationElements.length > 0) break;
-      }
-      
-      if (conversationElements) {
-        conversationElements.forEach((element, index) => {
-          const text = element.textContent.trim();
-          if (text && text.length > 10) {
-            // Try to determine role from class or content
-            const isUser = element.classList.contains('user') ||
-                          element.querySelector('[class*="user"]') ||
-                          index % 2 === 0;
-            
-            const role = isUser ? 'User' : 'Assistant';
-            messages.push(`${role}: ${text}`);
-          }
-        });
-      }
-      
-      // Format as markdown
-      const conversation = messages.join('\n\n---\n\n');
-      callback(conversation || 'No conversation found. Make sure you are on a Claude conversation page.');
-    }, 1000); // Wait for scroll
-  }
 })();
