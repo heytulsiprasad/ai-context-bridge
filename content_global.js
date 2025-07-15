@@ -84,16 +84,6 @@
       </div>
     `;
     
-    // Create settings button
-    const settingsBtn = document.createElement('button');
-    settingsBtn.id = 'ai-context-settings-btn';
-    settingsBtn.innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-        <path d="M12 15.5C13.933 15.5 15.5 13.933 15.5 12C15.5 10.067 13.933 8.5 12 8.5C10.067 8.5 8.5 10.067 8.5 12C8.5 13.933 10.067 15.5 12 15.5Z" stroke="currentColor" stroke-width="1.5"/>
-        <path d="M20.5 12C20.5 11.5 20.5 11 20.4 10.6L22.3 9.1C22.5 8.9 22.5 8.6 22.4 8.3L20.6 5.1C20.5 4.9 20.2 4.8 19.9 4.9L17.6 5.8C17.1 5.4 16.6 5.1 16 4.8L15.6 2.4C15.6 2.1 15.3 1.9 15 1.9H11.5C11.2 1.9 10.9 2.1 10.9 2.4L10.5 4.8C9.9 5.1 9.4 5.4 8.9 5.8L6.6 4.9C6.3 4.8 6 4.9 5.9 5.1L4.1 8.3C4 8.5 4 8.8 4.2 9L6.1 10.5C6 10.9 6 11.4 6 11.9C6 12.4 6 12.9 6.1 13.3L4.2 14.8C4 15 4 15.3 4.1 15.6L5.9 18.8C6 19 6.3 19.1 6.6 19L8.9 18.1C9.4 18.5 9.9 18.8 10.5 19.1L10.9 21.5C10.9 21.8 11.2 22 11.5 22H15C15.3 22 15.6 21.8 15.6 21.5L16 19.1C16.6 18.8 17.1 18.5 17.6 18.1L19.9 19C20.2 19.1 20.5 19 20.6 18.8L22.4 15.6C22.5 15.4 22.5 15.1 22.3 14.9L20.4 13.4C20.5 13 20.5 12.5 20.5 12Z" stroke="currentColor" stroke-width="1.5"/>
-      </svg>
-    `;
-    
     // Load and inject styles
     const style = document.createElement('style');
     fetch(chrome.runtime.getURL('styles.css'))
@@ -119,10 +109,6 @@
       }, 300);
     });
     
-    // Settings button click
-    settingsBtn.addEventListener('click', () => {
-      chrome.runtime.sendMessage({ action: 'openSettings' });
-    });
     
     // Function to extract page content if no text is selected
     function extractPageContent() {
@@ -198,7 +184,6 @@
     
     // Append elements to shadow DOM
     shadowRoot.appendChild(drawer);
-    shadowRoot.appendChild(settingsBtn);
     
     // Append container to body
     document.body.appendChild(container);

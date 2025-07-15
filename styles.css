@@ -111,35 +111,6 @@
   margin: 12px 0;
 }
 
-/* Settings Button */
-#ai-context-settings-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 36px;
-  height: 36px;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  z-index: 999998;
-}
-
-#ai-context-settings-btn:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-  transform: scale(1.05);
-}
-
-#ai-context-settings-btn svg {
-  width: 16px;
-  height: 16px;
-  color: #6b7280;
-}
 
 /* Scrollbar Styling */
 .drawer-content::-webkit-scrollbar {

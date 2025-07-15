@@ -1,4 +1,4 @@
-// Settings page functionality
+// Popup functionality
 
 document.addEventListener('DOMContentLoaded', () => {
   // Load current settings
@@ -45,7 +45,7 @@ function handleExtensionToggle(e) {
 function updateStatusDisplay(enabled) {
   const statusText = document.getElementById('statusText');
   statusText.textContent = enabled ? 'Active' : 'Inactive';
-  statusText.className = enabled ? '' : 'inactive';
+  statusText.className = enabled ? 'active' : 'inactive';
 }
 
 function handleAddPattern() {
@@ -117,7 +117,7 @@ function displayPatterns(patterns) {
   const container = document.getElementById('patternsList');
   
   if (patterns.length === 0) {
-    container.innerHTML = '<div class="empty-state">No excluded websites yet.</div>';
+    container.innerHTML = '<div class="empty-state">No excluded sites</div>';
     return;
   }
   

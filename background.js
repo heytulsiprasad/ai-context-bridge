@@ -18,9 +18,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     case 'continueInChatGPT':
       handleContinueConversation(action, conversation, fromPlatform);
       break;
-    case 'openSettings':
-      handleOpenSettings();
-      break;
   }
 });
 
@@ -66,11 +63,6 @@ function handleContinueConversation(action, conversation, fromPlatform) {
   }
   
   chrome.tabs.create({ url: destinationUrl });
-}
-
-function handleOpenSettings() {
-  // Create a settings page
-  chrome.tabs.create({ url: chrome.runtime.getURL('settings.html') });
 }
 
 // Helper function to copy text to clipboard

@@ -1,0 +1,293 @@
+/* Popup Styles */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: #ffffff;
+  color: #1f2937;
+  width: 320px;
+  min-height: 400px;
+}
+
+.popup-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Header */
+header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.logo {
+  width: 24px;
+  height: 24px;
+}
+
+h1 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* Main Content */
+main {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Popup Sections */
+.popup-section {
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.popup-section:last-of-type {
+  border-bottom: none;
+}
+
+.popup-section h2 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #374151;
+}
+
+/* Status Section */
+.status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.status-label {
+  font-size: 14px;
+  color: #374151;
+}
+
+.status-indicator {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+#statusText {
+  font-weight: 600;
+  color: #10b981;
+}
+
+#statusText.inactive {
+  color: #ef4444;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #e5e7eb;
+  transition: .3s;
+  border-radius: 20px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+  background-color: #667eea;
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(20px);
+}
+
+/* Current Site Section */
+.current-site {
+  background-color: #f9fafb;
+}
+
+.current-site-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-label {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* Exclusion Controls */
+.exclusion-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.pattern-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 13px;
+  transition: border-color 0.2s;
+}
+
+.pattern-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+/* Buttons */
+.btn-secondary {
+  padding: 6px 12px;
+  background-color: #f3f4f6;
+  color: #374151;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background-color: #e5e7eb;
+}
+
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #667eea;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-icon:hover {
+  background-color: #5a67d8;
+}
+
+/* Patterns List */
+.patterns-list {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.pattern-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: #f9fafb;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+.pattern-text {
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  color: #111827;
+  word-break: break-all;
+  flex: 1;
+  margin-right: 8px;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+.remove-btn:hover {
+  background-color: #fee2e2;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 20px;
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+/* Footer */
+.popup-footer {
+  padding: 12px 16px;
+  border-top: 1px solid #e5e7eb;
+  background: #f9fafb;
+  text-align: center;
+}
+
+.version {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+/* Scrollbar */
+.patterns-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.patterns-list::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 3px;
+}
+
+.patterns-list::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+.patterns-list::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
