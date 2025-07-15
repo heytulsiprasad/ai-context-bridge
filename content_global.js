@@ -212,7 +212,7 @@
     // Handle copy YouTube video action
     function handleCopyYouTubeVideo() {
       const url = window.location.href;
-      const prompt = `Watch this video: ${url}`;
+      const prompt = `Watch this video: ${url}\nso I can ask questions about it.`;
       copyTextToClipboard(prompt);
       showNotification('YouTube video prompt copied to clipboard!');
     }
