@@ -10,6 +10,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   switch (action) {
     case 'openInClaude':
     case 'openInChatGPT':
+    case 'openInPerplexity':
     case 'openInGrok':
       handleAIService(action, url, selectedText);
       break;
@@ -26,6 +27,9 @@ function handleAIService(action, url, selectedText) {
   } else if (action === 'openInChatGPT') {
     const encodedPrompt = encodeURIComponent(prompt);
     destinationUrl = `https://chat.openai.com/?q=${encodedPrompt}`;
+  } else if (action === 'openInPerplexity') {
+    const encodedPrompt = encodeURIComponent(prompt);
+    destinationUrl = `https://www.perplexity.ai/search?q=${encodedPrompt}&focus=internet`;
   } else if (action === 'openInGrok') {
     const encodedPrompt = encodeURIComponent(prompt);
     destinationUrl = `https://x.com/i/grok?text=${encodedPrompt}`;

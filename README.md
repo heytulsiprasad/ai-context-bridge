@@ -13,6 +13,7 @@ A Chrome extension that bridges webpage content to external AI services, allowin
 ### AI Service Integration
 - **Claude**: Opens new tab with pre-filled "Read from [URL]" prompt
 - **ChatGPT**: Opens new tab with pre-filled "Read from [URL]" prompt
+- **Perplexity**: Opens new tab with pre-filled "Read from [URL]" prompt with internet focus
 - **Grok**: Opens new tab with pre-filled "Read from [URL]" prompt
 - **Copy as Markdown**: Copies simple URL prompt to clipboard for any AI service
 
@@ -97,7 +98,8 @@ This extension was built following a test-driven, incremental development approa
 
 ### High Priority
 - **ChatGPT Thread Extraction**: Add button to copy entire ChatGPT conversation threads as formatted markdown
-- **More AI Services**: Add support for Perplexity, Anthropic Console, and other AI platforms
+- ~~**Perplexity Integration**: Add support for Perplexity with URL parameters~~ ✅ **COMPLETED**
+- **More AI Services**: Add support for Anthropic Console and other AI platforms
 - **Context Menus**: Right-click context menu integration for selected text
 - **Keyboard Shortcuts**: Configurable hotkeys for quick AI service access
 

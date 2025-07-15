@@ -60,6 +60,11 @@
             <span>Open in ChatGPT</span>
             <img src="" data-icon="external" alt="External Link" class="external-icon" />
           </div>
+          <div class="menu-item" data-action="openInPerplexity">
+            <img src="" data-icon="perplexity" alt="Perplexity" />
+            <span>Open in Perplexity</span>
+            <img src="" data-icon="external" alt="External Link" class="external-icon" />
+          </div>
           <div class="menu-item" data-action="openInGrok">
             <img src="" data-icon="grok" alt="Grok" />
             <span>Open in Grok</span>
@@ -274,6 +279,7 @@
       'chatgpt': chrome.runtime.getURL('icons/chatgpt.jpg'),
       'copy': 'https://img.icons8.com/color/24/copy.png',
       'grok': chrome.runtime.getURL('icons/grok.png'),
+      'perplexity': 'https://img.icons8.com/color/24/search.png',
       'external': chrome.runtime.getURL('icons/ext-link.png'),
       'youtube': 'https://img.icons8.com/color/24/youtube-play.png',
       'arrow': 'https://img.icons8.com/color/24/circled-right-2.png'
