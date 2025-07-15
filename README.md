@@ -1,60 +1,71 @@
 # AI Context Bridge Chrome Extension
 
-A Chrome extension that bridges webpage content to external AI services, allowing users to easily send selected text or page content to ChatGPT, Grok, Cursor, and Cloud Code.
+A Chrome extension that bridges webpage content to external AI services, allowing users to easily send selected text or page content to Claude, ChatGPT, and Grok with a convenient draggable interface.
 
 ## Features
 
 ### Core Functionality
-- **Floating Action Button**: Appears on all webpages with a dropdown menu
-- **Text Selection Detection**: Automatically captures selected text
-- **Page Content Extraction**: Falls back to main page content when no text is selected
+- **Draggable Drawer**: Appears as a floating drawer on all webpages with customizable positioning
+- **Global Position Memory**: Remembers drawer position across all websites and syncs across devices
+- **Smart URL Detection**: Automatically detects content type and shows relevant options
 - **Shadow DOM Isolation**: Prevents style conflicts with host pages
 
 ### AI Service Integration
-- **ChatGPT**: Opens new tab with pre-filled prompt
-- **Grok**: Opens new tab with pre-filled prompt  
-- **Cursor**: Copies formatted context to clipboard
-- **Cloud Code**: Copies formatted context to clipboard
+- **Claude**: Opens new tab with pre-filled "Read from [URL]" prompt
+- **ChatGPT**: Opens new tab with pre-filled "Read from [URL]" prompt
+- **Grok**: Opens new tab with pre-filled "Read from [URL]" prompt
+- **Copy as Markdown**: Copies simple URL prompt to clipboard for any AI service
 
-### ChatGPT Conversation Export
-- **Copy Button**: Injected into ChatGPT interface
-- **Conversation Scraping**: Extracts all user and assistant messages
-- **Clipboard Export**: Formats and copies conversation history
+### YouTube Integration
+- **YouTube Video Detection**: Shows special "Copy YouTube Video" option when on YouTube
+- **Video Summarization**: Copies "Watch this video: [URL]" prompt for AI video analysis
 
 ## Installation
 
 1. Clone or download this repository
-2. Add icon files to the `icons/` directory (see `icons/README.md`)
-3. Open Chrome and navigate to `chrome://extensions/`
-4. Enable "Developer mode"
-5. Click "Load unpacked" and select the extension directory
+2. Open Chrome and navigate to `chrome://extensions/`
+3. Enable "Developer mode"
+4. Click "Load unpacked" and select the extension directory
 
 ## Usage
 
-### Global Floating Button
+### Draggable Drawer
 1. Visit any webpage
-2. Click the floating blue button in the bottom-right corner
-3. Select your desired AI service from the dropdown
-4. Selected text (or page content) will be sent to the chosen service
+2. Find the floating drawer icon on the right side of the screen
+3. Drag it up or down to your preferred position (position is remembered globally)
+4. Hover over the drawer to expand the menu
+5. Click on your desired AI service or copy option
 
-### ChatGPT Conversation Export
-1. Visit `chat.openai.com`
-2. Click the "Copy Conversation" button in the top-right corner
-3. The formatted conversation will be copied to your clipboard
+### YouTube Videos
+1. Visit any YouTube video page
+2. The drawer will show an additional "Copy YouTube Video" option
+3. Click to copy a video analysis prompt to your clipboard
+
+### Extension Settings
+1. Click the extension icon in the browser toolbar
+2. Toggle the extension on/off
+3. Exclude specific websites using regex patterns
 
 ## File Structure
 
 ```
 ├── manifest.json           # Extension configuration
-├── background.js           # Background script for tab/clipboard handling
-├── content_global.js       # Global content script (floating button)
+├── background.js           # Background script for tab handling
+├── content_global.js       # Global content script (draggable drawer)
 ├── content_chatgpt.js      # ChatGPT-specific content script
-├── styles.css              # Global styles
+├── popup.html              # Extension popup interface
+├── popup.js                # Popup functionality
+├── popup.css               # Popup styles
+├── styles.css              # Global drawer styles
 ├── styles_chat.css         # ChatGPT-specific styles
-├── icons/                  # Extension icons
-│   ├── icon16.png
-│   ├── icon48.png
-│   └── icon128.png
+├── icons/                  # Extension and AI service icons
+│   ├── icon16.png          # Extension icon (16px)
+│   ├── icon48.png          # Extension icon (48px)
+│   ├── icon128.png         # Extension icon (128px)
+│   ├── claude.png          # Claude AI icon
+│   ├── chatgpt.jpg         # ChatGPT icon
+│   ├── grok.png            # Grok icon
+│   └── ext-link.png        # External link icon
 └── README.md
 ```
 
@@ -81,6 +92,35 @@ This extension was built following a test-driven, incremental development approa
 
 - Chrome (Manifest V3)
 - Other Chromium-based browsers
+
+## 🚀 Future Roadmap
+
+### High Priority
+- **ChatGPT Thread Extraction**: Add button to copy entire ChatGPT conversation threads as formatted markdown
+- **More AI Services**: Add support for Perplexity, Anthropic Console, and other AI platforms
+- **Context Menus**: Right-click context menu integration for selected text
+- **Keyboard Shortcuts**: Configurable hotkeys for quick AI service access
+
+### Medium Priority
+- **Smart Content Detection**: Automatically detect and handle different content types (articles, code, tables)
+- **Conversation Continuity**: Import/export conversation history between different AI services
+- **Custom Prompts**: Allow users to create and save custom prompt templates
+- **Multi-language Support**: Localization for different languages
+
+### Low Priority
+- **Theme Customization**: Dark/light theme options and custom color schemes
+- **Analytics Dashboard**: Usage statistics and AI service preferences
+- **Team Collaboration**: Share prompts and configurations across team members
+- **API Integration**: Direct integration with AI service APIs for seamless experience
+
+### Experimental
+- **AI Service Comparison**: Side-by-side comparison of responses from different AI services
+- **Voice Integration**: Voice-to-text for hands-free AI interaction
+- **Mobile Extension**: Support for mobile browsers with touch-friendly interface
+
+## Contributing
+
+We welcome contributions! Please feel free to submit issues, feature requests, or pull requests.
 
 ## License
 
